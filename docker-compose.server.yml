@@ -1,0 +1,10 @@
+version: '3'
+services:
+  ss-server:
+    image: crazyxhz/ss
+    environment:
+      PASSWORD: "password"
+    network_mode: "host"
+    cap_add:
+    - NET_ADMIN
+

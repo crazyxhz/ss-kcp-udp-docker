@@ -1,0 +1,36 @@
+version: '3'
+services:
+  ss_client:
+    image: crazyxhz/ss
+    environment:
+      # ss,udp2raw 公用的密码
+      PASSWORD: "password"
+      # 容器的运行模式，默认server，若指定了client 之后以客户端方式运行
+      MODE: "client"
+      # VPS 服务器IP
+      SERVER_IP: "vps_ip"
+    network_mode: "host"
+    #容器内使用iptables 需要网络管理员权限
+    cap_add:
+    - NET_ADMIN
+  pac_server:
+    image: crazyxhz/pac
+    environment:
+      #pac server的端口，pac文件的地址为 http://<本机ip>:<port>/pac
+      PORT: "1986"
+      # 本机IP
+      SOCKSERVER_IP: "10.210.241.145"
+      # crazyxhz/ss 暴露出来的socks5 代理接口，可以在crazyxhz/ss 中通过环境变量 SOCKS5_PORT 指定
+      SOCKSERVER_PORT: "5544"
+    ports:
+      #将容器内指定的端口映射到本机端口
+      #可以通过地址http://<本机ip>:1986/ 访问Pac Server的web管理页面，后者需和PORT环境变量一致
+      - "1986:1986"
+    volumes:
+      #将和本文件同级的 pac文件夹挂载到容器内的/src/app/pac路径，可以直接修改本机的./pac/paclist文件或者通过 http://<本机ip>:1987/ web管理页面来添加走代理的host
+      - "./pac:/usr/src/app/pac"
+    expose:
+      #暴露容器内的1986端口，需和PORT环境变量一致
+      - 1986
+    working_dir: "/usr/src/app"
+

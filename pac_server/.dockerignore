@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+docker-compose.yml
+paclist
+pac
+.dockerignore
+Dockerfile

@@ -1,0 +1,14 @@
+{
+  "name": "pac_proxy_server",
+  "version": "1.0.0",
+  "author": "crazyxhz@gmail.com",
+  "description": "本机pac代理，可以添加hostname，自动刷新",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon --watch server.js server.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.8.x",
+    "express": "~4.10.x"
+  }
+}

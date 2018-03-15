@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pac Host管理</title>
+    <script src="vue.min.js"></script>
+    <style>
+        #urlInput {
+            width: 100%;
+            font-size: 2em;
+        }
+
+        #addBtn, #status {
+            font-size: 2em;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<input id="urlInput" type="url" placeholder="请输入要走代理的URL（自动解析hostname）">
+<p id="status"></p>
+<button id="addBtn">添加</button>
+<ul id="pacList">
+    <li v-for="(item,i) in pacList">{{item}}
+        <button @click="remove(i)">x</button>
+    </li>
+</ul>
+
+<script>
+  function remove (index) {
+    del(app.pacList.length - index - 1);
+  }
+
+  function del (index) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', '/del');
+    xhr.onload = function () {
+      var result = JSON.parse(xhr.responseText);
+      if (result.error) {
+        document.getElementById('status').innerText = result.error;
+      } else {
+        document.getElementById('urlInput').value = '';
+        refreshList();
+      }
+    };
+    xhr.onerror = function (err) {
+      document.getElementById('status').innerText = err;
+    };
+    xhr.send(index);
+  }
+
+  function getList (cb) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', '/list');
+    xhr.onload = function () {
+      var data = xhr.responseText.split('\n').reverse();
+      data.shift();
+      cb(data);
+    };
+    xhr.send();
+  }
+
+  function addUrl (url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', '/add');
+    xhr.onload = function () {
+      var result = JSON.parse(xhr.responseText);
+      if (result.error) {
+        document.getElementById('status').innerText = result.error;
+      } else {
+        document.getElementById('urlInput').value = '';
+        refreshList();
+      }
+    };
+    xhr.onerror = function (err) {
+      document.getElementById('status').innerText = err;
+    };
+    xhr.send(url);
+  }
+
+  function click () {
+    document.getElementById('status').innerText = '';
+    var url = document.getElementById('urlInput').value;
+    addUrl(url);
+  }
+
+  document.getElementById('addBtn').onclick = click;
+
+  var app = new Vue({
+    el: '#pacList',
+    data: {
+      pacList: null
+    }
+  });
+
+  function refreshList () {
+    getList(function (pacList) {
+      app.pacList = pacList;
+    });
+  }
+
+  refreshList();
+
+</script>
+</body>
+</html>
