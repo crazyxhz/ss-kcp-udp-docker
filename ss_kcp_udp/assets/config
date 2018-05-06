@@ -1,0 +1,12 @@
+# This file only needs to list configuration variables that deviate
+# from the default values.  See /usr/share/doc/polipo/examples/config.sample
+# and "polipo -v" for variables you can tweak and further information.
+
+# Note IPv6 is not enabled
+proxyAddress = "0.0.0.0"
+disableIndexing = false
+disableServersList = false
+diskCacheRoot = /cache
+localDocumentRoot = ""
+socksParentProxy = localhost:5544
+socksProxyType = socks5

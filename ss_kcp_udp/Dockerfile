@@ -10,7 +10,8 @@ ENV SS_DOWNLOAD_URL https://js.t.sinajs.cn/weiboad/apps/sf/misc/ssli.81a9fa3.ssl
 ENV KCP_DOWNLOAD_URL https://js.t.sinajs.cn/weiboad/apps/sf/misc/kc.5268f4d.kcp
 ENV UDP_RAW_URL https://js.t.sinajs.cn/weiboad/apps/sf/misc/ud.9351e6c.udp
 
-
+ADD ./assets/polipo /usr/bin/polipo
+ADD ./assets/config /etc/polipo/config
 RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\nhttps://mirrors.ustc.edu.cn/alpine/latest-stable/community" > /etc/apk/repositories && \
     apk upgrade --update \
     && apk add bash tzdata libsodium iptables \
@@ -64,7 +65,11 @@ RUN echo -e "https://mirrors.ustc.edu.cn/alpine/latest-stable/main\nhttps://mirr
         kc.5268f4d.kcp \
         shadowsocks-libev-3.1.3 \
         # simple-obfs \
-        /var/cache/apk/*  
+        /var/cache/apk/* \
+    && mkdir -p /etc/polipo \
+    && mkdir /cache \
+    && chmod +x /usr/bin/polipo
+
 
 ADD entrypoint.sh /entrypoint.sh
 

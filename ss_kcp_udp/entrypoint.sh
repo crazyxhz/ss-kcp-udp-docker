@@ -42,6 +42,7 @@ if [ "$MODE" = "client" ]; then
     udp2raw_amd64 -c -r "$SERVER_IP":"$UDPRAW_PORT_SS_UDPRELAY" -l "127.0.0.1:$SS_PORT_UDPRELAY" --raw-mode faketcp -k "$PASSWORD" --log-level "$UDPRAW_LOG_LEVEL" --cipher-mode "$UDP_CRYPT" --auth-mode "$UDP_AUTH" 2>&1 &
     kcpclient -r "127.0.0.1:$KCP_PORT" -l "127.0.0.1:$SS_PORT" --mode "$KCP_MODE" -mtu "$KCP_MTU" --crypt "$KCP_CRYPT" --nocomp --dscp "$KCP_DSCP" 2>&1 &
     ss-local -s 127.0.0.1 -p "$SS_PORT_UDPRELAY" -b 0.0.0.0 -l "$SOCKS5_PORT" -m "$SS_CRYPT" -k "$PASSWORD" --fast-open -U 2>&1 &
+    polipo 2>&1 &
     ss-local -s 127.0.0.1 -p "$SS_PORT" -b 0.0.0.0 -l "$SOCKS5_PORT" -m "$SS_CRYPT" -k "$PASSWORD" --fast-open
 else
     udp2raw_amd64 -s -l 0.0.0.0:"$UDPRAW_PORT" -r 127.0.0.1:"$KCP_PORT" -k "$PASSWORD" --raw-mode faketcp --log-level "$UDPRAW_LOG_LEVEL" --cipher-mode "$UDP_CRYPT" --auth-mode "$UDP_AUTH" 2>&1 &
